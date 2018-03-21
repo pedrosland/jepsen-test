@@ -12,6 +12,7 @@
              [tests :as tests]]
             [knossos.model :as model]
             [jepsen.control.util :as cu]
+            [jepsen.checker.timeline :as timeline]
             [jepsen.os.debian :as debian]))
 
 (def dir "/opt/etcd")
@@ -132,8 +133,11 @@
                             (gen/stagger 1)
                             (gen/nemesis nil)
                             (gen/time-limit 10))
-            :model (model/cas-register)
-            :checker (checker/linearizable)}))
+            :checker (checker/compose
+                      {:linear (checker/linearizable)
+                       :perf (checker/perf)
+                       :timeline (timeline/html)})
+            :model (model/cas-register)}))
 
 (comment "(gen/nemesis nil) disables the nemesis")
 
