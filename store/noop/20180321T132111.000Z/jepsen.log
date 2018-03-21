@@ -1,0 +1,103 @@
+2018-03-21 13:21:11,470{GMT}	INFO	[jepsen test runner] jepsen.core: Running test:
+ {:nodes-file "/home/admin/nodes",
+ :concurrency 5,
+ :db
+ #object[jepsen.db$reify__1498 0x3a26ec8d "jepsen.db$reify__1498@3a26ec8d"],
+ :name "noop",
+ :start-time
+ #object[org.joda.time.DateTime 0xae2db25 "2018-03-21T13:21:11.000Z"],
+ :net
+ #object[jepsen.net$reify__3910 0x68868328 "jepsen.net$reify__3910@68868328"],
+ :client
+ #object[jepsen.client$reify__3766 0x72fd8a3c "jepsen.client$reify__3766@72fd8a3c"],
+ :barrier
+ #object[java.util.concurrent.CyclicBarrier 0x6edf29c1 "java.util.concurrent.CyclicBarrier@6edf29c1"],
+ :ssh
+ {:username "root",
+  :password "root",
+  :strict-host-key-checking false,
+  :private-key-path nil},
+ :checker
+ #object[jepsen.checker$unbridled_optimism$reify__3589 0xa2341c6 "jepsen.checker$unbridled_optimism$reify__3589@a2341c6"],
+ :nemesis
+ #object[jepsen.nemesis$reify__3993 0x648d0e6d "jepsen.nemesis$reify__3993@648d0e6d"],
+ :active-histories #<Atom@5c5d6175: #{}>,
+ :nodes
+ ["ec2-18-194-154-137.eu-central-1.compute.amazonaws.com"
+  "ec2-35-157-17-10.eu-central-1.compute.amazonaws.com"
+  "ec2-35-157-182-120.eu-central-1.compute.amazonaws.com"
+  "ec2-18-197-202-79.eu-central-1.compute.amazonaws.com"
+  "ec2-18-194-191-249.eu-central-1.compute.amazonaws.com"],
+ :test-count 1,
+ :generator
+ #object[jepsen.generator$reify__2233 0x1b1c538d "jepsen.generator$reify__2233@1b1c538d"],
+ :os
+ #object[jepsen.os$reify__1415 0x7fb66650 "jepsen.os$reify__1415@7fb66650"],
+ :time-limit 60,
+ :model {}}
+
+2018-03-21 13:21:11,929{GMT}	ERROR	[clojure-agent-send-off-pool-1] jepsen.control: Error opening SSH session. Verify username, password, and node hostnames are correct.
+SSH configuration is:
+ {:dir "/",
+ :private-key-path nil,
+ :password "root",
+ :username "root",
+ :port 22,
+ :strict-host-key-checking false,
+ :host "ec2-35-157-17-10.eu-central-1.compute.amazonaws.com",
+ :sudo nil,
+ :dummy nil,
+ :session nil}
+
+2018-03-21 13:21:12,002{GMT}	ERROR	[clojure-agent-send-off-pool-0] jepsen.control: Error opening SSH session. Verify username, password, and node hostnames are correct.
+SSH configuration is:
+ {:dir "/",
+ :private-key-path nil,
+ :password "root",
+ :username "root",
+ :port 22,
+ :strict-host-key-checking false,
+ :host "ec2-18-194-154-137.eu-central-1.compute.amazonaws.com",
+ :sudo nil,
+ :dummy nil,
+ :session nil}
+
+2018-03-21 13:21:12,069{GMT}	ERROR	[clojure-agent-send-off-pool-4] jepsen.control: Error opening SSH session. Verify username, password, and node hostnames are correct.
+SSH configuration is:
+ {:dir "/",
+ :private-key-path nil,
+ :password "root",
+ :username "root",
+ :port 22,
+ :strict-host-key-checking false,
+ :host "ec2-18-194-191-249.eu-central-1.compute.amazonaws.com",
+ :sudo nil,
+ :dummy nil,
+ :session nil}
+
+2018-03-21 13:21:12,126{GMT}	ERROR	[clojure-agent-send-off-pool-3] jepsen.control: Error opening SSH session. Verify username, password, and node hostnames are correct.
+SSH configuration is:
+ {:dir "/",
+ :private-key-path nil,
+ :password "root",
+ :username "root",
+ :port 22,
+ :strict-host-key-checking false,
+ :host "ec2-18-197-202-79.eu-central-1.compute.amazonaws.com",
+ :sudo nil,
+ :dummy nil,
+ :session nil}
+
+2018-03-21 13:21:12,199{GMT}	ERROR	[clojure-agent-send-off-pool-2] jepsen.control: Error opening SSH session. Verify username, password, and node hostnames are correct.
+SSH configuration is:
+ {:dir "/",
+ :private-key-path nil,
+ :password "root",
+ :username "root",
+ :port 22,
+ :strict-host-key-checking false,
+ :host "ec2-35-157-182-120.eu-central-1.compute.amazonaws.com",
+ :sudo nil,
+ :dummy nil,
+ :session nil}
+

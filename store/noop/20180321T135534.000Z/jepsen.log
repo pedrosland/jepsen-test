@@ -1,0 +1,89 @@
+2018-03-21 13:55:34,184{GMT}	INFO	[jepsen test runner] jepsen.core: Running test:
+ {:nodes-file "/home/admin/nodes",
+ :concurrency 5,
+ :db
+ #object[jepsen.etcdemo$db$reify__321 0x78e17a99 "jepsen.etcdemo$db$reify__321@78e17a99"],
+ :name "noop",
+ :start-time
+ #object[org.joda.time.DateTime 0x367f0121 "2018-03-21T13:55:34.000Z"],
+ :net
+ #object[jepsen.net$reify__3910 0x4397a639 "jepsen.net$reify__3910@4397a639"],
+ :client
+ #object[jepsen.client$reify__3766 0x7e7f3cfd "jepsen.client$reify__3766@7e7f3cfd"],
+ :barrier
+ #object[java.util.concurrent.CyclicBarrier 0x34b9eb03 "java.util.concurrent.CyclicBarrier@34b9eb03"],
+ :ssh
+ {:username "admin",
+  :password "root",
+  :strict-host-key-checking false,
+  :private-key-path nil},
+ :checker
+ #object[jepsen.checker$unbridled_optimism$reify__3589 0x4d499d65 "jepsen.checker$unbridled_optimism$reify__3589@4d499d65"],
+ :nemesis
+ #object[jepsen.nemesis$reify__3993 0x4fa822ad "jepsen.nemesis$reify__3993@4fa822ad"],
+ :active-histories #<Atom@24d61e4: #{}>,
+ :nodes
+ ["ec2-18-194-154-137.eu-central-1.compute.amazonaws.com"
+  "ec2-35-157-17-10.eu-central-1.compute.amazonaws.com"
+  "ec2-35-157-182-120.eu-central-1.compute.amazonaws.com"
+  "ec2-18-197-202-79.eu-central-1.compute.amazonaws.com"
+  "ec2-18-194-191-249.eu-central-1.compute.amazonaws.com"],
+ :test-count 1,
+ :generator
+ #object[jepsen.generator$reify__2233 0xb34832b "jepsen.generator$reify__2233@b34832b"],
+ :os
+ #object[jepsen.os.debian$reify__311 0x63538bb4 "jepsen.os.debian$reify__311@63538bb4"],
+ :time-limit 60,
+ :model {}}
+
+2018-03-21 13:55:34,914{GMT}	INFO	[jepsen node ec2-35-157-182-120.eu-central-1.compute.amazonaws.com] jepsen.os.debian: ec2-35-157-182-120.eu-central-1.compute.amazonaws.com setting up debian
+2018-03-21 13:55:34,914{GMT}	INFO	[jepsen node ec2-18-194-191-249.eu-central-1.compute.amazonaws.com] jepsen.os.debian: ec2-18-194-191-249.eu-central-1.compute.amazonaws.com setting up debian
+2018-03-21 13:55:34,914{GMT}	INFO	[jepsen node ec2-18-197-202-79.eu-central-1.compute.amazonaws.com] jepsen.os.debian: ec2-18-197-202-79.eu-central-1.compute.amazonaws.com setting up debian
+2018-03-21 13:55:34,915{GMT}	INFO	[jepsen node ec2-18-194-154-137.eu-central-1.compute.amazonaws.com] jepsen.os.debian: ec2-18-194-154-137.eu-central-1.compute.amazonaws.com setting up debian
+2018-03-21 13:55:34,916{GMT}	INFO	[jepsen node ec2-35-157-17-10.eu-central-1.compute.amazonaws.com] jepsen.os.debian: ec2-35-157-17-10.eu-central-1.compute.amazonaws.com setting up debian
+2018-03-21 13:55:42,041{GMT}	INFO	[jepsen node ec2-18-194-154-137.eu-central-1.compute.amazonaws.com] jepsen.os.debian: Installing #{iproute psmisc ntpdate faketime libzip2 unzip}
+2018-03-21 13:55:42,541{GMT}	INFO	[jepsen node ec2-35-157-182-120.eu-central-1.compute.amazonaws.com] jepsen.os.debian: Installing #{iproute psmisc ntpdate faketime libzip2 unzip}
+2018-03-21 13:55:42,735{GMT}	INFO	[jepsen node ec2-18-197-202-79.eu-central-1.compute.amazonaws.com] jepsen.os.debian: Installing #{iproute psmisc ntpdate faketime libzip2 unzip}
+2018-03-21 13:55:42,935{GMT}	INFO	[jepsen node ec2-35-157-17-10.eu-central-1.compute.amazonaws.com] jepsen.os.debian: Installing #{iproute psmisc ntpdate faketime libzip2 unzip}
+2018-03-21 13:55:43,736{GMT}	INFO	[jepsen node ec2-18-194-191-249.eu-central-1.compute.amazonaws.com] jepsen.os.debian: Installing #{iproute psmisc ntpdate faketime libzip2 unzip}
+2018-03-21 13:56:07,880{GMT}	INFO	[jepsen node ec2-18-197-202-79.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-18-197-202-79.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,880{GMT}	INFO	[jepsen node ec2-18-194-191-249.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-18-194-191-249.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,880{GMT}	INFO	[jepsen node ec2-35-157-17-10.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-35-157-17-10.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,881{GMT}	INFO	[jepsen node ec2-35-157-182-120.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-35-157-182-120.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,881{GMT}	INFO	[jepsen node ec2-18-197-202-79.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :setting-up ec2-18-197-202-79.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,881{GMT}	INFO	[jepsen node ec2-18-194-191-249.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :setting-up ec2-18-194-191-249.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,881{GMT}	INFO	[jepsen node ec2-35-157-17-10.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :setting-up ec2-35-157-17-10.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,881{GMT}	INFO	[jepsen node ec2-35-157-182-120.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :setting-up ec2-35-157-182-120.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,881{GMT}	INFO	[jepsen node ec2-18-194-154-137.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-18-194-154-137.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,882{GMT}	INFO	[jepsen node ec2-18-194-154-137.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :setting-up ec2-18-194-154-137.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,887{GMT}	INFO	[jepsen worker 0] jepsen.core: Starting worker 0
+2018-03-21 13:56:07,888{GMT}	INFO	[jepsen nemesis] jepsen.core: Starting nemesis
+2018-03-21 13:56:07,888{GMT}	INFO	[jepsen worker 1] jepsen.core: Starting worker 1
+2018-03-21 13:56:07,888{GMT}	INFO	[jepsen worker 2] jepsen.core: Starting worker 2
+2018-03-21 13:56:07,889{GMT}	INFO	[jepsen worker 0] jepsen.core: Running worker 0
+2018-03-21 13:56:07,889{GMT}	INFO	[jepsen worker 3] jepsen.core: Starting worker 3
+2018-03-21 13:56:07,890{GMT}	INFO	[jepsen worker 4] jepsen.core: Starting worker 4
+2018-03-21 13:56:07,890{GMT}	INFO	[jepsen nemesis] jepsen.core: Running nemesis
+2018-03-21 13:56:07,890{GMT}	INFO	[jepsen worker 1] jepsen.core: Running worker 1
+2018-03-21 13:56:07,890{GMT}	INFO	[jepsen worker 2] jepsen.core: Running worker 2
+2018-03-21 13:56:07,891{GMT}	INFO	[jepsen worker 3] jepsen.core: Running worker 3
+2018-03-21 13:56:07,891{GMT}	INFO	[jepsen worker 4] jepsen.core: Running worker 4
+2018-03-21 13:56:07,892{GMT}	INFO	[jepsen nemesis] jepsen.core: Stopping nemesis
+2018-03-21 13:56:07,892{GMT}	INFO	[jepsen worker 1] jepsen.core: Stopping worker 1
+2018-03-21 13:56:07,891{GMT}	INFO	[jepsen worker 0] jepsen.core: Stopping worker 0
+2018-03-21 13:56:07,892{GMT}	INFO	[jepsen worker 3] jepsen.core: Stopping worker 3
+2018-03-21 13:56:07,894{GMT}	INFO	[jepsen worker 4] jepsen.core: Stopping worker 4
+2018-03-21 13:56:07,895{GMT}	INFO	[jepsen worker 2] jepsen.core: Stopping worker 2
+2018-03-21 13:56:07,901{GMT}	INFO	[jepsen test runner] jepsen.core: Run complete, writing
+2018-03-21 13:56:07,921{GMT}	INFO	[jepsen node ec2-18-194-154-137.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-18-194-154-137.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,921{GMT}	INFO	[jepsen node ec2-35-157-17-10.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-35-157-17-10.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,921{GMT}	INFO	[jepsen node ec2-18-197-202-79.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-18-197-202-79.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,921{GMT}	INFO	[jepsen node ec2-18-194-191-249.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-18-194-191-249.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,922{GMT}	INFO	[jepsen node ec2-35-157-182-120.eu-central-1.compute.amazonaws.com] jepsen.etcdemo: :tearing-down ec2-35-157-182-120.eu-central-1.compute.amazonaws.com
+2018-03-21 13:56:07,930{GMT}	INFO	[jepsen test runner] jepsen.core: Analyzing
+2018-03-21 13:56:07,930{GMT}	INFO	[jepsen test runner] jepsen.core: Analysis complete
+2018-03-21 13:56:07,932{GMT}	INFO	[jepsen results] jepsen.store: Wrote /home/admin/etcdemo/store/noop/20180321T135534.000Z/results.edn
+2018-03-21 13:56:07,935{GMT}	INFO	[main] jepsen.core: {:valid? true}
+
+
+Everything looks good! ヽ(‘ー`)ノ
