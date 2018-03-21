@@ -2,6 +2,7 @@
   (:require [clojure.tools.logging :refer :all]
             [clojure.string :as str]
             [verschlimmbesserung.core :as v]
+            [slingshot.slingshot :refer [try+]]
             [jepsen [cli :as cli]
              [client :as client]
              [control :as c]
@@ -104,9 +105,12 @@
              :write (do (v/reset! conn "foo" (:value op))
                       (assoc op :type, :ok))
              :cas (let [[v v'] (:value op)]
-                    (assoc op :type (if (v/cas! conn "foo" v v')
-                      :ok
-                      :fail)))))
+                    (try+
+                      (assoc op :type (if (v/cas! conn "foo" v v')
+                        :ok
+                        :fail))
+                      (catch [:errorCode 100] e
+                        (assoc op :type :fail, :error :not-found))))))
 
   (teardown! [_ test])
 
