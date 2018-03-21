@@ -1,9 +1,12 @@
 (ns jepsen.etcdemo
   (:require [clojure.tools.logging :refer :all]
             [clojure.string :as str]
+            [verschlimmbesserung.core :as v]
             [jepsen [cli :as cli]
+             [client :as client]
              [control :as c]
              [db :as db]
+             [generator :as gen]
              [tests :as tests]]
             [jepsen.control.util :as cu]
             [jepsen.os.debian :as debian]))
@@ -72,6 +75,29 @@
          (log-files [db test node]
                     [logfile])))
 
+(defn r   [test process] {:type :invoke, :f :read, :value nil})
+(defn w   [test process] {:type :invoke, :f :write, :value (rand-int 5)})
+(defn cas [test process] {:type :invoke, :f :cas, :value [(rand-int 5) (rand-int 5)]})
+
+
+(comment "in open!, should use a timeout. can use this if not provided by client lib: (util/timeout 5000 :default (can write stuff here))")
+
+(defrecord Client [conn]
+  client/Client
+
+  (open! [this test node]
+         (assoc this :conn (v/connect (client-url node)
+                                      {:timeout 5000})))
+
+  (setup! [this test])
+
+  (invoke! [_ test op])
+
+  (teardown! [_ test])
+
+  (close! [_ test]))
+  (comment "close connections here if the db library uses connections")
+
 (defn etcd-test
     "Given an options map from the command line runner (e.g. :nodes, :ssh,
     :concurrency, ...), constructs a test map."
@@ -79,7 +105,14 @@
     (merge tests/noop-test
            opts
            {:os debian/os
-            :db (db "v3.1.5")}))
+            :db (db "v3.1.5")
+            :client (Client. nil)
+            :generator (->> r
+                            (gen/stagger 1)
+                            (gen/nemesis nil)
+                            (gen/time-limit 10))}))
+
+(comment "(gen/nemesis nil) disables the nemesis")
 
 (defn -main
     "Handles command line arguments. Can either run a test, or a web server for
