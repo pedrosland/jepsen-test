@@ -80,6 +80,12 @@
 (defn cas [test process] {:type :invoke, :f :cas, :value [(rand-int 5) (rand-int 5)]})
 
 
+(defn parse-long
+  "Parses a string as long"
+  [x]
+  (when x
+    (Long/parseLong x)))
+
 (comment "in open!, should use a timeout. can use this if not provided by client lib: (util/timeout 5000 :default (can write stuff here))")
 
 (defrecord Client [conn]
@@ -93,7 +99,14 @@
 
   (invoke! [_ test op]
            (case (:f op)
-             :read (assoc op :type :ok, :value (v/get conn "foo"))))
+             :read (let [v (parse-long (v/get conn "foo"))]
+                     (assoc op :type :ok, :value v))
+             :write (do (v/reset! conn "foo" (:value op))
+                      (assoc op :type, :ok))
+             :cas (let [[v v'] (:value op)]
+                    (assoc op :type (if (v/cas! conn "foo" v v')
+                      :ok
+                      :fail)))))
 
   (teardown! [_ test])
 
@@ -109,7 +122,7 @@
            {:os debian/os
             :db (db "v3.1.5")
             :client (Client. nil)
-            :generator (->> r
+            :generator (->> (gen/mix [r, w, cas])
                             (gen/stagger 1)
                             (gen/nemesis nil)
                             (gen/time-limit 10))}))
