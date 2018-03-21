@@ -91,7 +91,9 @@
 
   (setup! [this test])
 
-  (invoke! [_ test op])
+  (invoke! [_ test op]
+           (case (:f op)
+             :read (assoc op :type :ok, :value (v/get conn "foo"))))
 
   (teardown! [_ test])
 
