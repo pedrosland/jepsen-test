@@ -4,11 +4,13 @@
             [verschlimmbesserung.core :as v]
             [slingshot.slingshot :refer [try+]]
             [jepsen [cli :as cli]
+             [checker :as checker]
              [client :as client]
              [control :as c]
              [db :as db]
              [generator :as gen]
              [tests :as tests]]
+            [knossos.model :as model]
             [jepsen.control.util :as cu]
             [jepsen.os.debian :as debian]))
 
@@ -129,7 +131,9 @@
             :generator (->> (gen/mix [r, w, cas])
                             (gen/stagger 1)
                             (gen/nemesis nil)
-                            (gen/time-limit 10))}))
+                            (gen/time-limit 10))
+            :model (model/cas-register)
+            :checker (checker/linearizable)}))
 
 (comment "(gen/nemesis nil) disables the nemesis")
 
