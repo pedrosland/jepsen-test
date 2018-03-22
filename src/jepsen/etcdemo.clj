@@ -85,6 +85,7 @@
 (defn cas [test process] {:type :invoke, :f :cas, :value [(rand-int 5) (rand-int 5)]})
 
 
+; just to make things a little prettier when reading logs
 (defn parse-long
   "Parses a string as long"
   [x]
@@ -103,18 +104,27 @@
   (setup! [this test])
 
   (invoke! [_ test op]
-           (case (:f op)
-             :read (let [v (parse-long (v/get conn "foo" {:quorum? true}))]
-                     (assoc op :type :ok, :value v))
-             :write (do (v/reset! conn "foo" (:value op))
-                      (assoc op :type, :ok))
-             :cas (let [[v v'] (:value op)]
-                    (try+
-                      (assoc op :type (if (v/cas! conn "foo" v v')
-                        :ok
-                        :fail))
-                      (catch [:errorCode 100] e
-                        (assoc op :type :fail, :error :not-found))))))
+           (try+
+             (case (:f op)
+               :read (try
+                       (let [v (parse-long (v/get conn "foo" {:quorum? true}))]
+                        (assoc op :type :ok, :value v))
+                         (catch java.net.SocketTimeoutException ex
+                           (assoc op :type :fail, :error :timeout)))
+               :write (do (v/reset! conn "foo" (:value op))
+                        (assoc op :type, :ok))
+               :cas (let [[v v'] (:value op)]
+                        (assoc op :type (if (v/cas! conn "foo" v v')
+                          :ok
+                          :fail))))
+
+            (catch java.net.SocketTimeoutException e
+              (assoc op
+                     :type (if (= (:f  op) :read) :fail :info)
+                    :error :timeout))
+
+            (catch [:errorCode 100] ex
+              (assoc op :type :fail, :error :not-found))))
 
   (teardown! [_ test])
 
