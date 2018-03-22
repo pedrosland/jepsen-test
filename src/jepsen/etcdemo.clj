@@ -104,7 +104,7 @@
 
   (invoke! [_ test op]
            (case (:f op)
-             :read (let [v (parse-long (v/get conn "foo"))]
+             :read (let [v (parse-long (v/get conn "foo" {:quorum? true}))]
                      (assoc op :type :ok, :value v))
              :write (do (v/reset! conn "foo" (:value op))
                       (assoc op :type, :ok))

@@ -34,3 +34,9 @@ Everything looks good! ヽ(‘ー`)ノ
 ```
 
 `:valid` may be `indeterminate` or `unknown`. This means that it was unable to check. Possibly due to low memory or taking too long. Either use larger machine or rewrite test because it is poor.
+
+`:configs` is the state of the world just before things went bad
+
+`:last-op` and `:previous-ok` are different interpretations of the last known good point.
+
+`:op` is (with linearizable checker) the furthest state we could reach with the linearizable checker just when things went wrong.
