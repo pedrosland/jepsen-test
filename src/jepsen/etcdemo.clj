@@ -8,6 +8,7 @@
              [client :as client]
              [control :as c]
              [db :as db]
+             [independent :as independent]
              [generator :as gen]
              [nemesis :as nemesis]
              [tests :as tests]]
@@ -104,27 +105,26 @@
   (setup! [this test])
 
   (invoke! [_ test op]
-           (try+
-             (case (:f op)
-               :read (try
-                       (let [v (parse-long (v/get conn "foo" {:quorum? true}))]
-                        (assoc op :type :ok, :value v))
-                         (catch java.net.SocketTimeoutException ex
-                           (assoc op :type :fail, :error :timeout)))
-               :write (do (v/reset! conn "foo" (:value op))
-                        (assoc op :type, :ok))
-               :cas (let [[v v'] (:value op)]
-                        (assoc op :type (if (v/cas! conn "foo" v v')
-                          :ok
-                          :fail))))
+           (let [[k v] (:value op)]
+             (try+
+               (case (:f op)
+                 :read (let [v (parse-long (v/get conn k {:quorum? true}))]
+                          (assoc op :type :ok
+                                 :value (independent/tuple k v)))
+                 :write (do (v/reset! conn k v)
+                          (assoc op :type, :ok))
+                 :cas (let [[v v'] v]
+                          (assoc op :type (if (v/cas! conn k v v')
+                            :ok
+                            :fail))))
 
-            (catch java.net.SocketTimeoutException e
-              (assoc op
-                     :type (if (= (:f  op) :read) :fail :info)
-                    :error :timeout))
+              (catch java.net.SocketTimeoutException e
+                (assoc op
+                       :type (if (= (:f  op) :read) :fail :info)
+                      :error :timeout))
 
-            (catch [:errorCode 100] ex
-              (assoc op :type :fail, :error :not-found))))
+              (catch [:errorCode 100] ex
+                (assoc op :type :fail, :error :not-found)))))
 
   (teardown! [_ test])
 
@@ -141,8 +141,14 @@
             :db (db "v3.1.5")
             :client (Client. nil)
             :nemesis (nemesis/partition-random-halves)
-            :generator (->> (gen/mix [r, w, cas])
-                            (gen/stagger 1/10)
+            :generator (->> (independent/concurrent-generator
+                             10
+                             (range)
+                             (fn [k]
+                               (->>
+                                 (gen/mix [r, w, cas])
+                                (gen/stagger 1/10)
+                                  (gen/limit 100))))
                             (gen/nemesis
                              (gen/seq (cycle [(gen/sleep 5)
                                        {:type :info, :f :start}
@@ -152,9 +158,11 @@
                                        {:type :info, :f :stop}])))
                             (gen/time-limit (:time-limit opts)))
             :checker (checker/compose
-                      {:linear (checker/linearizable)
-                       :perf (checker/perf)
-                       :timeline (timeline/html)})
+                      {:perf (checker/perf)
+                       :per-key (independent/checker
+                                 (checker/compose
+                                  {:linear (checker/linearizable)
+                                   :timeline (timeline/html)}))})
             :model (model/cas-register)}))
 
 ; (gen/nemesis nil) disables the nemesis")
