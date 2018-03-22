@@ -108,7 +108,7 @@
            (let [[k v] (:value op)]
              (try+
                (case (:f op)
-                 :read (let [v (parse-long (v/get conn k {:quorum? true}))]
+                 :read (let [v (parse-long (v/get conn k {:quorum? (:quorum test)}))]
                           (assoc op :type :ok
                                  :value (independent/tuple k v)))
                  :write (do (v/reset! conn k v)
@@ -135,10 +135,13 @@
     "Given an options map from the command line runner (e.g. :nodes, :ssh,
     :concurrency, ...), constructs a test map."
     [opts]
-    (merge tests/noop-test
+    (let [quorum (boolean (:quorum opts))]
+      (merge tests/noop-test
            opts
            {:os debian/os
             :db (db "v3.1.5")
+            :name (str "etcd q=" quorum)
+            :quorum quorum
             :client (Client. nil)
             :nemesis (nemesis/partition-random-halves)
             :generator (->> (independent/concurrent-generator
@@ -163,14 +166,19 @@
                                  (checker/compose
                                   {:linear (checker/linearizable)
                                    :timeline (timeline/html)}))})
-            :model (model/cas-register)}))
+            :model (model/cas-register)})))
 
 ; (gen/nemesis nil) disables the nemesis")
+
+(def cli-opts
+  "Additional command line options"
+  [["-q" "--quorum" "Use quorum reads"]])
 
 (defn -main
     "Handles command line arguments. Can either run a test, or a web server for
     browsing results."
     [& args]
-    (cli/run! (merge (cli/single-test-cmd {:test-fn etcd-test})
+    (cli/run! (merge (cli/single-test-cmd {:test-fn etcd-test
+                                           :opt-spec cli-opts})
                      (cli/serve-cmd))
               args))
