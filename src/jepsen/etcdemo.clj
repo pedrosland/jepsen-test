@@ -9,6 +9,7 @@
              [control :as c]
              [db :as db]
              [generator :as gen]
+             [nemesis :as nemesis]
              [tests :as tests]]
             [knossos.model :as model]
             [jepsen.control.util :as cu]
@@ -129,10 +130,17 @@
            {:os debian/os
             :db (db "v3.1.5")
             :client (Client. nil)
+            :nemesis (nemesis/partition-random-halves)
             :generator (->> (gen/mix [r, w, cas])
                             (gen/stagger 1)
-                            (gen/nemesis nil)
-                            (gen/time-limit 10))
+                            (gen/nemesis
+                             (gen/seq [(gen/sleep 5)
+                                       {:type :info, :f :start}
+                                       ; look at latency diagrams - start small eg 1 and increase
+                                       ; need to allow for tcp connections to drop too
+                                       (gen/sleep 1/10)
+                                       {:type :info, :f :stop}]))
+                            (gen/time-limit 20))
             :checker (checker/compose
                       {:linear (checker/linearizable)
                        :perf (checker/perf)
