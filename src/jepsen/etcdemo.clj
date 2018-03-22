@@ -68,7 +68,7 @@
                      :--initial-advertise-peer-urls  (peer-url node)
                      :--initial-cluster              (initial-cluster test))))
 
-                    (comment this should loop and wait for the db to be alive but we're lazy)
+                    ; this should loop and wait for the db to be alive but we're lazy
 
                     (Thread/sleep 10000))
          (teardown! [db test node]
@@ -91,11 +91,11 @@
   (when x
     (Long/parseLong x)))
 
-(comment "in open!, should use a timeout. can use this if not provided by client lib: (util/timeout 5000 :default (can write stuff here))")
-
 (defrecord Client [conn]
   client/Client
 
+  ; in open!, should always use a timeout.
+  ; can use this if not provided by client lib: (util/timeout 5000 :default (can write stuff here))
   (open! [this test node]
          (assoc this :conn (v/connect (client-url node)
                                       {:timeout 5000})))
@@ -119,7 +119,7 @@
   (teardown! [_ test])
 
   (close! [_ test]))
-  (comment "close connections here if the db library uses connections")
+  ; close connections here if the db library uses connections
 
 (defn etcd-test
     "Given an options map from the command line runner (e.g. :nodes, :ssh,
@@ -134,20 +134,20 @@
             :generator (->> (gen/mix [r, w, cas])
                             (gen/stagger 1)
                             (gen/nemesis
-                             (gen/seq [(gen/sleep 5)
+                             (gen/seq (cycle [(gen/sleep 5)
                                        {:type :info, :f :start}
                                        ; look at latency diagrams - start small eg 1 and increase
                                        ; need to allow for tcp connections to drop too
-                                       (gen/sleep 1/10)
-                                       {:type :info, :f :stop}]))
-                            (gen/time-limit 20))
+                                       (gen/sleep 5)
+                                       {:type :info, :f :stop}])))
+                            (gen/time-limit 40))
             :checker (checker/compose
                       {:linear (checker/linearizable)
                        :perf (checker/perf)
                        :timeline (timeline/html)})
             :model (model/cas-register)}))
 
-(comment "(gen/nemesis nil) disables the nemesis")
+; (gen/nemesis nil) disables the nemesis")
 
 (defn -main
     "Handles command line arguments. Can either run a test, or a web server for
