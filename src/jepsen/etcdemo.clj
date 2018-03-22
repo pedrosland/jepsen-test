@@ -16,7 +16,8 @@
             [jepsen.control.util :as cu]
             [jepsen.checker.timeline :as timeline]
             [jepsen.os.debian :as debian]
-            [jepsen.etcdemo.support :as s]))
+            [jepsen.etcdemo.support :as s]
+            [jepsen.etcdemo.set :as set]))
 
 (defn r   [test process] {:type :invoke, :f :read, :value nil})
 (defn w   [test process] {:type :invoke, :f :write, :value (rand-int 5)})
@@ -72,7 +73,8 @@
     "Given an options map from the command line runner (e.g. :nodes, :ssh,
     :concurrency, ...), constructs a test map."
     [opts]
-    (let [quorum (boolean (:quorum opts))]
+    (let [quorum (boolean (:quorum opts))
+          workload (set/workload opts)]
       (merge tests/noop-test
            opts
            {:os debian/os
@@ -103,7 +105,25 @@
                                  (checker/compose
                                   {:linear (checker/linearizable)
                                    :timeline (timeline/html)}))})
-            :model (model/cas-register)})))
+            :model (model/cas-register)}
+             {:client (:client workload)
+              :checker (:checker workload)
+              :generator (gen/phases
+                          (->> (:generator workload)
+                               (gen/stagger (/ (:rate opts)))
+                               (gen/nemesis
+                                (gen/seq
+                                  (cycle
+                                    [(gen/sleep 5)
+                                     {:type :info, :f :start}
+                                     (gen/sleep 5)
+                                     {:type :info, :f :stop}])))
+                               (gen/time-limit (:time-limit opts)))
+                          (gen/nemesis (gen/once {:type :info, :f :stop}))
+                          (gen/log "Waiting for recovery")
+                          (gen/sleep 10)
+                          (gen/log "Performing a final read")
+                          (:final-generator workload))})))
 
 ; (gen/nemesis nil) disables the nemesis")
 
